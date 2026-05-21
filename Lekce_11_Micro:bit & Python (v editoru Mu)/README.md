@@ -1,95 +1,25 @@
-# Micro:bit & Python (v editoru Mu)
-
-Pro seznámení s textovým programováním v jazyce MicroPython budeme používat přátelské a intuitivní prostředí [Mu Editor](https://codewith.mu/). 
-
-Do začátků i pro pokročilejší experimentování vám bude skvělým pomocníkem tento oficiální výukový průvodce pro [Micro:bit](https://codewith.mu/en/tutorials/1.2/microbit), kde najdete spoustu praktických ukázek a vysvětlení.
-
-
-## Syntaxe
-### 1. Start programu
-Každý program musí začínat tímto řádkem, aby Micro:bit věděl, co má dělat:
-`from microbit import *`
-
-
-### 2. Displej (Oči Micro:bitu)
-```# Zobrazení přednastaveného obrázku (např. srdce, úsměv, křížek)
-display.show(Image.HEART)
-display.show(Image.NO)     # Křížek
-display.show(Image.YES)    # Fajfka
-
-# Běžící text (scrolling)
-display.scroll("AHOJ")
-
-# Vymazání displeje (zhasnutí všech diod)
-display.clear()
-```
-
-### 3. Tlačítka (Vstupy od uživatele)
-```# Zjištění, zda je tlačítko A právě teď stisknuté
-if button_a.is_pressed():
-    # udělej něco
-
-# Zjištění, zda bylo tlačítko B stisknuto (a uvolněno) od poslední kontroly
-if button_b.was_pressed():
-    # udělej něco
-```
-
-### 4. Akcelerometr (Pohyb a třesení)
-```
-# Pokud uživatel deskou zatřese
-if accelerometer.was_gesture("shake"):
-    # udělej něco
-
-# Další gesta: "up", "down", "left", "right", "face up", "freefall"
-```
-
-### 5. Teploměr (Měření prostředí)
-```
-# Přečte teplotu v celých stupních Celsia a uloží ji do proměnné
-aktualni_teplota = temperature()
-```
-
-### 6. Zvuk (Pípání a melodie)
-**Pozor:** Pro zvuk je nutné na úplný začátek programu přidat import music.
-```
-# Přehrání přednastavené melodie
-music.play(music.BA_DING)
-music.play(music.NYAN)
-
-# Zahrání jednoho konkrétního tónu (např. tón A4) po dobu 500 milisekund
-music.pitch(440, 500)
-```
-<br>
----------------------------------------------------------------------------------------------------------------------------------
-
-**Největší šok** při přechodu z MakeCode do Pythonu je to, že kód proběhne jen jednou a skončí.
-
-Aby Micro:bit neustále kontroloval tlačítka (jako blok Vždy ve Scratchi/MakeCode), musí být vše **zabaleno v nekonečném cyklu**.
-```
 from microbit import *
-
-# Zde se píše kód, který se provede jen jednou po startu (např. úvodní smajlík)
+import music
 
 while True:
-    # Zde se píše kód, který běží neustále dokola (kontrola tlačítek, teploty...)
-```
-<br>
----------------------------------------------------------------------------------------------------------------------------------
 
-### Rychlý tahák základních příkazů
+    # Tlačítko A
+    if button_a.is_pressed():
+        display.show(Image.HAPPY)
+        music.play(music.BA_DING)
 
-Start programu	`from microbit import *`
+    # Tlačítko B
+    elif button_b.is_pressed():
+        display.show(Image.SAD)
+        music.play(music.WAWAWAWAA)
 
-Nekonečná smyčka	`while True:`
+    # Zatřesení micro:bitem
+    if accelerometer.was_gesture("shake"):
+        display.scroll("AHOJ")
 
-Obrázek na displeji	`display.show(Image.HAPPY)`
+    # Zobrazení teploty při otočení nahoru
+    if accelerometer.was_gesture("up"):
+        teplota = temperature()
+        display.scroll(str(teplota))
 
-Běžící text	`display.scroll("Text")`
-
-Stisk tlačítka A	`if button_a.is_pressed():`
-
-Zatřesení	`if accelerometer.was_gesture("shake"):`
-
-Teplota	`teplota = temperature()`
-
-Přehrání hudby	`music.play(music.ENTERTAINER) (vyžaduje import music)`
+    sleep(100)
